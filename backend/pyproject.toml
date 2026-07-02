@@ -1,0 +1,38 @@
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Generated migration files are historical, append-only DDL scripts —
+# rewriting their style after the fact (or holding new ones to strict
+# style rules) doesn't add value and risks accidental edits to applied
+# migrations. alembic/env.py is hand-written and stays linted.
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008: FastAPI's dependency injection idiom requires `Depends(...)` as
+# a parameter default (e.g. `db: Session = Depends(get_db)`) — this is
+# the documented, correct way to use FastAPI, not the "mutable default
+# argument" footgun B008 exists to catch. Disabling only this rule.
+ignore = ["B008"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
