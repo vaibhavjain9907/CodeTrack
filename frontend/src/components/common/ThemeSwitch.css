@@ -1,0 +1,188 @@
+/**
+ * ThemeSwitch.css
+ *
+ * Ported from the Uiverse "animated theme toggle" by rishichawda.
+ * The original used element IDs (#toggle, #sun, #moon…) which only
+ * work for a single instance on the page. Everything here is
+ * rewritten against BEM-style classes scoped under `.theme-switch`
+ * so the component is safe to render more than once, plus the
+ * adjacent-sibling trick (`input:checked + svg …`) is preserved to
+ * keep the exact cross-fade/slide behavior driven by CSS, not JS.
+ *
+ * Colors are GitHub Dark / soft-sky, not the original's saturated
+ * cartoon palette. Rendered size is set from ThemeSwitch.tsx (the
+ * viewBox stays fixed — only the pixel width/height shrink — so the
+ * component stays perfectly sharp at any zoom or device pixel ratio).
+ *
+ * Perf note: each animated part gets its own minimal
+ * `transition-property` (only what actually changes on it) rather
+ * than one shared rule applied to every element. `.theme-switch__patches`
+ * (the moon craters) never animates, so it intentionally has no
+ * transition at all.
+ */
+
+.theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 9999px;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Subtle lift on hover — around the whole control, not just the SVG,
+   so it reads as one coherent hit target. */
+.theme-switch:hover {
+  box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.16);
+}
+html.dark .theme-switch:hover {
+  box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.45);
+}
+
+.theme-switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.theme-switch__svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Visible keyboard focus ring — the input itself is visually hidden,
+   so the ring is drawn on the svg via the sibling combinator. */
+.theme-switch__input:focus-visible + .theme-switch__svg {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Track                                                             */
+/* ---------------------------------------------------------------- */
+
+.theme-switch__container {
+  fill: #bfe0ef; /* soft sky blue, light mode */
+  transition: fill 0.28s ease;
+}
+
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__container {
+  fill: #0d1117; /* GitHub Dark canvas */
+}
+
+/* ---------------------------------------------------------------- */
+/* Knob position — the only transform-animated part, so it's the     */
+/* only element that needs `will-change`.                            */
+/* ---------------------------------------------------------------- */
+
+.theme-switch__button {
+  will-change: transform;
+  transition: transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__button {
+  transform: translate(28px, 2.333px);
+}
+
+/* ---------------------------------------------------------------- */
+/* Sun / moon crossfade                                              */
+/* ---------------------------------------------------------------- */
+
+.theme-switch__sun,
+.theme-switch__moon,
+.theme-switch__cloud {
+  transition: opacity 0.28s ease;
+}
+
+.theme-switch__sun {
+  opacity: 1;
+}
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__sun {
+  opacity: 0;
+}
+
+.theme-switch__moon {
+  opacity: 0;
+}
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__moon {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------- */
+/* Background props (cloud / stars)                                  */
+/* ---------------------------------------------------------------- */
+
+.theme-switch__cloud {
+  opacity: 0.75; /* desaturated + slightly dimmer than the source */
+}
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__cloud {
+  opacity: 0;
+}
+
+.theme-switch__stars {
+  opacity: 0;
+  transition: opacity 0.32s ease;
+}
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__stars {
+  opacity: 0.85; /* softer than fully opaque */
+}
+
+/* Subtle star twinkle — only while dark mode is active, and only
+   when the user hasn't asked for reduced motion. Lowered amplitude
+   so it reads as a glimmer, not a flash. */
+@keyframes theme-switch-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.theme-switch__input:checked + .theme-switch__svg .theme-switch__star {
+  animation: theme-switch-twinkle 2.6s ease-in-out infinite;
+}
+.theme-switch__star:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.theme-switch__star:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.theme-switch__star:nth-child(4) {
+  animation-delay: 0.9s;
+}
+.theme-switch__star:nth-child(5) {
+  animation-delay: 1.2s;
+}
+.theme-switch__star:nth-child(6) {
+  animation-delay: 0.15s;
+}
+.theme-switch__star:nth-child(7) {
+  animation-delay: 0.45s;
+}
+.theme-switch__star:nth-child(8) {
+  animation-delay: 0.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch,
+  .theme-switch__container,
+  .theme-switch__button,
+  .theme-switch__sun,
+  .theme-switch__moon,
+  .theme-switch__cloud,
+  .theme-switch__stars,
+  .theme-switch__star {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+}

@@ -10,4 +10,42 @@
   body {
     @apply bg-surface-50 text-surface-900 dark:bg-surface-950 dark:text-surface-50;
   }
+
+  /* Consistent, visible keyboard focus everywhere — buttons/inputs opt in
+     to their own ring color, this is the fallback for anything else. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white dark:ring-offset-surface-950;
+  }
+
+  /* Thin, unobtrusive scrollbars that match the surface palette in both
+     themes (used inside dropdown panels and the mobile drawer). */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.surface.300") transparent;
+  }
+  .dark .scrollbar-thin {
+    scrollbar-color: theme("colors.surface.700") transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme("colors.surface.300");
+    border-radius: 9999px;
+  }
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme("colors.surface.700");
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
