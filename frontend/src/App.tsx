@@ -18,6 +18,7 @@ import { LeetCodeConnectPage } from "@/features/leetcode/LeetCodeConnectPage";
 import { LeetCodeDashboardPage } from "@/features/leetcode/LeetCodeDashboardPage";
 import { CodeforcesConnectPage } from "@/features/codeforces/CodeforcesConnectPage";
 import { CodeforcesDashboardPage } from "@/features/codeforces/CodeforcesDashboardPage";
+import { GoalsPage } from "@/features/goals/GoalsPage";
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
 
             <Route path="/codeforces" element={<ProtectedRoute><CodeforcesDashboardPage /></ProtectedRoute>} />
             <Route path="/codeforces/connect" element={<ProtectedRoute><CodeforcesConnectPage /></ProtectedRoute>} />
+
+            <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
 
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

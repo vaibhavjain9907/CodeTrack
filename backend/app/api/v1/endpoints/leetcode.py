@@ -70,6 +70,19 @@ def get_profile(
     )
 
 
+@router.delete(
+    "/profile",
+    response_model=APIResponse[None],
+    summary="Disconnect the linked LeetCode account",
+)
+def disconnect(
+    current_user: CurrentUser,
+    leetcode_service: LeetCodeService = Depends(get_leetcode_service),
+) -> APIResponse[None]:
+    leetcode_service.disconnect(user_id=current_user.id)
+    return APIResponse(message="LeetCode account disconnected successfully.", data=None)
+
+
 @router.get(
     "/submissions",
     response_model=APIResponse[list[LeetCodeSubmissionResponse]],

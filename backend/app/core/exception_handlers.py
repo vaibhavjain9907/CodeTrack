@@ -28,6 +28,8 @@ from app.core.exceptions import (
     CodeforcesProfileNotConnectedError,
     CodeforcesSyncFailedError,
     EmailAlreadyRegisteredError,
+    GoalError,
+    GoalNotFoundError,
     InactiveUserError,
     InvalidCredentialsError,
     InvalidRefreshTokenError,
@@ -77,6 +79,10 @@ _CODEFORCES_ERROR_STATUS_MAP: dict[type[CodeforcesError], int] = {
     CodeforcesSyncFailedError: status.HTTP_502_BAD_GATEWAY,
 }
 
+_GOAL_ERROR_STATUS_MAP: dict[type[GoalError], int] = {
+    GoalNotFoundError: status.HTTP_404_NOT_FOUND,
+}
+
 
 def _status_for(exc: AuthError) -> int:
     return _AUTH_ERROR_STATUS_MAP.get(type(exc), status.HTTP_400_BAD_REQUEST)
@@ -88,6 +94,10 @@ def _status_for_leetcode(exc: LeetCodeError) -> int:
 
 def _status_for_codeforces(exc: CodeforcesError) -> int:
     return _CODEFORCES_ERROR_STATUS_MAP.get(type(exc), status.HTTP_400_BAD_REQUEST)
+
+
+def _status_for_goal(exc: GoalError) -> int:
+    return _GOAL_ERROR_STATUS_MAP.get(type(exc), status.HTTP_400_BAD_REQUEST)
 
 
 async def auth_error_handler(request: Request, exc: AuthError) -> JSONResponse:
@@ -107,6 +117,13 @@ async def leetcode_error_handler(request: Request, exc: LeetCodeError) -> JSONRe
 async def codeforces_error_handler(request: Request, exc: CodeforcesError) -> JSONResponse:
     return JSONResponse(
         status_code=_status_for_codeforces(exc),
+        content=ErrorResponse(message=str(exc)).model_dump(),
+    )
+
+
+async def goal_error_handler(request: Request, exc: GoalError) -> JSONResponse:
+    return JSONResponse(
+        status_code=_status_for_goal(exc),
         content=ErrorResponse(message=str(exc)).model_dump(),
     )
 
@@ -164,6 +181,7 @@ def register_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AuthError, cast(ExceptionHandler, auth_error_handler))
     app.add_exception_handler(LeetCodeError, cast(ExceptionHandler, leetcode_error_handler))
     app.add_exception_handler(CodeforcesError, cast(ExceptionHandler, codeforces_error_handler))
+    app.add_exception_handler(GoalError, cast(ExceptionHandler, goal_error_handler))
     app.add_exception_handler(HTTPException, cast(ExceptionHandler, http_exception_handler))
     app.add_exception_handler(
         RequestValidationError, cast(ExceptionHandler, validation_error_handler)

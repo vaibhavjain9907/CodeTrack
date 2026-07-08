@@ -20,13 +20,16 @@ from app.db.session import get_db
 from app.models.enums import UserRole
 from app.models.user import User
 from app.repositories.codeforces_repository import CodeforcesRepository
+from app.repositories.goal_repository import GoalRepository
 from app.repositories.leetcode_repository import LeetCodeRepository
 from app.repositories.refresh_token_repository import RefreshTokenRepository
 from app.repositories.user_repository import UserRepository
 from app.security.jwt import InvalidTokenError, TokenType, decode_token
+from app.services.analytics_service import AnalyticsService
 from app.services.auth_service import AuthService
 from app.services.codeforces_service import CodeforcesService
 from app.services.dashboard_service import DashboardService
+from app.services.goal_service import GoalService
 from app.services.leetcode_service import LeetCodeService
 
 # tokenUrl points at the login endpoint purely for the interactive
@@ -74,6 +77,25 @@ def get_codeforces_service(
     codeforces_repository: CodeforcesRepository = Depends(get_codeforces_repository),
 ) -> CodeforcesService:
     return CodeforcesService(codeforces_repository)
+
+
+def get_analytics_service(
+    leetcode_repository: LeetCodeRepository = Depends(get_leetcode_repository),
+    codeforces_repository: CodeforcesRepository = Depends(get_codeforces_repository),
+) -> AnalyticsService:
+    return AnalyticsService(leetcode_repository, codeforces_repository)
+
+
+def get_goal_repository(db: Session = Depends(get_db)) -> GoalRepository:
+    return GoalRepository(db)
+
+
+def get_goal_service(
+    goal_repository: GoalRepository = Depends(get_goal_repository),
+    leetcode_repository: LeetCodeRepository = Depends(get_leetcode_repository),
+    codeforces_repository: CodeforcesRepository = Depends(get_codeforces_repository),
+) -> GoalService:
+    return GoalService(goal_repository, leetcode_repository, codeforces_repository)
 
 
 def get_current_user(

@@ -105,6 +105,20 @@ class LeetCodeService:
             raise LeetCodeProfileNotConnectedError()
         return self._repository.get_submissions(profile.id, limit=limit)
 
+    def disconnect(self, *, user_id: int) -> None:
+        """
+        Remove the LeetCode connection for this user.
+
+        Cascades to leetcode_submissions via the FK's ON DELETE CASCADE,
+        so no separate submission cleanup is needed. Idempotent: if no
+        profile is connected, raises LeetCodeProfileNotConnectedError so
+        the caller can return a clear 404 rather than a silent 200.
+        """
+        profile = self._repository.get_profile_by_user_id(user_id)
+        if profile is None:
+            raise LeetCodeProfileNotConnectedError()
+        self._repository.delete_profile(profile)
+
     async def _sync_profile(self, profile: LeetCodeProfile) -> int:
         """
         Shared sync logic for connect() and sync(). Returns the number

@@ -101,6 +101,19 @@ class CodeforcesService:
             raise CodeforcesProfileNotConnectedError()
         return self._repository.get_contest_history(profile.id, limit=limit)
 
+    def disconnect(self, *, user_id: int) -> None:
+        """
+        Remove the Codeforces connection for this user.
+
+        Cascades to codeforces_submissions and codeforces_contest_results
+        via ON DELETE CASCADE — no separate child-row cleanup needed.
+        Raises CodeforcesProfileNotConnectedError if nothing is connected.
+        """
+        profile = self._repository.get_profile_by_user_id(user_id)
+        if profile is None:
+            raise CodeforcesProfileNotConnectedError()
+        self._repository.delete_profile(profile)
+
     async def _sync_profile(self, profile: CodeforcesProfile) -> tuple[int, int]:
         """
         Shared sync logic for connect() and sync(). Returns

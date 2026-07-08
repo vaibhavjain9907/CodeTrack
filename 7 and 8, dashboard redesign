@@ -1,0 +1,47 @@
+warning: in the working copy of 'SESSION_SUMMARY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/api/deps.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/api/v1/endpoints/codeforces.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/api/v1/endpoints/leetcode.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/api/v1/router.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/core/exception_handlers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/core/exceptions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/db/base.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/models/enums.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/schemas/validators.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/services/codeforces_service.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/services/leetcode_service.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/requirements-dev.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/layout/Sidebar.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/ActivityHeatmap.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/GoalProgress.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/OverviewCards.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/PlatformCards.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/RecentActivity.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/features/dashboard/StatCard.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/index.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/DashboardPage.tsx', LF will be replaced by CRLF the next time Git touches it
+ SESSION_SUMMARY.md                                 |  93 [32m++++++[m[31m---[m
+ backend/app/api/deps.py                            |  22 [32m+++[m
+ backend/app/api/v1/endpoints/codeforces.py         |  13 [32m++[m
+ backend/app/api/v1/endpoints/leetcode.py           |  13 [32m++[m
+ backend/app/api/v1/router.py                       |   4 [32m+[m[31m-[m
+ backend/app/core/exception_handlers.py             |  18 [32m++[m
+ backend/app/core/exceptions.py                     |  10 [32m+[m
+ backend/app/db/base.py                             |   2 [32m+[m
+ backend/app/models/enums.py                        |  16 [32m++[m
+ backend/app/schemas/validators.py                  |  20 [32m+[m[31m-[m
+ backend/app/services/codeforces_service.py         |  13 [32m++[m
+ backend/app/services/leetcode_service.py           |  14 [32m++[m
+ backend/requirements-dev.txt                       |   1 [32m+[m
+ frontend/src/App.tsx                               |   3 [32m+[m
+ frontend/src/components/layout/Sidebar.tsx         |   3 [32m+[m[31m-[m
+ .../src/features/dashboard/ActivityHeatmap.tsx     | 153 [32m+++++++++[m[31m-----[m
+ frontend/src/features/dashboard/GoalProgress.tsx   | 174 [32m+++++++++[m[31m-------[m
+ frontend/src/features/dashboard/OverviewCards.tsx  |  21 [32m+[m[31m-[m
+ frontend/src/features/dashboard/PlatformCards.tsx  |  40 [32m++[m[31m--[m
+ frontend/src/features/dashboard/RecentActivity.tsx |  62 [32m++++[m[31m--[m
+ frontend/src/features/dashboard/StatCard.tsx       | 219 [32m++++++++++++++++[m[31m-----[m
+ frontend/src/index.css                             |  14 [32m++[m
+ frontend/src/pages/DashboardPage.tsx               | 136 [32m++++++++++++[m[31m-[m
+ 23 files changed, 825 insertions(+), 239 deletions(-)

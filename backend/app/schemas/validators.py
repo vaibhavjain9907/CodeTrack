@@ -1,9 +1,9 @@
 """
-Password strength validation.
+Shared field-level validation helpers.
 
-A single, reusable validator function so the rules can never drift
-between registration, password-reset, and any future "change password"
-endpoint — they all call `validate_password_strength`.
+Reusable validator functions so rules can never drift between the
+schemas that need them — e.g. both GoalCreate and GoalUpdate call
+`validate_deadline_not_past`.
 
 Rules enforced (deliberately readable, not regex-golf):
 - At least 8 characters.
@@ -14,6 +14,7 @@ Rules enforced (deliberately readable, not regex-golf):
 """
 
 import re
+from datetime import date
 
 MIN_PASSWORD_LENGTH = 8
 
@@ -37,3 +38,14 @@ def validate_password_strength(password: str) -> str:
     if not _SPECIAL_CHAR_PATTERN.search(password):
         raise ValueError("Password must contain at least one special character.")
     return password
+
+
+def validate_deadline_not_past(deadline: date | None) -> date | None:
+    """
+    Validate a goal deadline, returning it unchanged on success or
+    raising ValueError on failure. Designed to be used directly as a
+    Pydantic field_validator body (see app/schemas/goal.py).
+    """
+    if deadline is not None and deadline < date.today():
+        raise ValueError("Deadline cannot be in the past.")
+    return deadline

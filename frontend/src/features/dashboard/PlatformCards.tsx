@@ -11,6 +11,10 @@
  * scaled relative to the highest solved-count already present in this
  * same query result — it's a derived comparison across real numbers
  * we already fetched, not a fabricated or externally-assumed scale.
+ *
+ * "Last sync" was part of this round's design brief, but the platform
+ * payload (platform / connected / total_solved / rating) has no
+ * timestamp to show — it's left out rather than shown as a fake value.
  */
 
 import { useQuery } from "@tanstack/react-query";
@@ -29,18 +33,18 @@ const PLATFORM_LABELS: Record<string, string> = {
  * convenience, not a claim about the platforms' real brand colors. */
 const PLATFORM_STYLE: Record<
   string,
-  { mark: string; text: string; ring: string; bar: string }
+  { mark: string; text: string; borderHover: string; bar: string }
 > = {
   leetcode: {
     mark: "bg-warning/10 text-warning ring-1 ring-inset ring-warning/20",
     text: "text-warning",
-    ring: "group-hover:ring-warning/30",
+    borderHover: "group-hover:border-warning/40",
     bar: "bg-warning",
   },
   codeforces: {
     mark: "bg-brand-500/10 text-brand-600 ring-1 ring-inset ring-brand-500/20 dark:text-brand-400",
     text: "text-brand-600 dark:text-brand-400",
-    ring: "group-hover:ring-brand-500/30",
+    borderHover: "group-hover:border-brand-500/40",
     bar: "bg-brand-500",
   },
 };
@@ -48,7 +52,7 @@ const PLATFORM_STYLE: Record<
 const DEFAULT_STYLE = {
   mark: "bg-surface-100 text-surface-500 ring-1 ring-inset ring-surface-200 dark:bg-surface-800 dark:text-surface-400 dark:ring-surface-700",
   text: "text-surface-500 dark:text-surface-400",
-  ring: "group-hover:ring-surface-300",
+  borderHover: "group-hover:border-surface-400 dark:group-hover:border-surface-600",
   bar: "bg-surface-400",
 };
 
@@ -68,7 +72,7 @@ const itemVariants = {
 
 function PlatformCardSkeleton() {
   return (
-    <div className="h-[148px] animate-pulse rounded-2xl border border-surface-200 bg-surface-100 dark:border-surface-800 dark:bg-surface-800" />
+    <div className="h-[164px] animate-pulse rounded-[20px] border border-surface-200 bg-surface-100 dark:border-surface-800 dark:bg-surface-800" />
   );
 }
 
@@ -80,7 +84,7 @@ export function PlatformCards() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <PlatformCardSkeleton />
         <PlatformCardSkeleton />
       </div>
@@ -89,7 +93,7 @@ export function PlatformCards() {
 
   if (isError || !data) {
     return (
-      <div className="rounded-2xl border border-surface-200 bg-white p-6 text-sm text-surface-500 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-400">
+      <div className="rounded-[20px] border border-surface-200 bg-white p-6 text-sm text-surface-500 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-400">
         Couldn&apos;t load platform status right now.
       </div>
     );
@@ -105,7 +109,7 @@ export function PlatformCards() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+      className="grid grid-cols-1 gap-5 sm:grid-cols-2"
     >
       {data.platforms.map((platform) => {
         const style = PLATFORM_STYLE[platform.platform] ?? DEFAULT_STYLE;
@@ -117,18 +121,18 @@ export function PlatformCards() {
           <motion.div
             key={platform.platform}
             variants={itemVariants}
-            whileHover={{ y: -3 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-6 transition-colors ${
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={`group relative flex flex-col justify-between overflow-hidden rounded-[20px] border p-6 transition-colors duration-200 ${
               platform.connected
-                ? `border-surface-200 bg-white ring-1 ring-transparent dark:border-surface-800 dark:bg-surface-900 ${style.ring}`
+                ? `border-surface-200 bg-white shadow-card dark:border-surface-800 dark:bg-surface-900 dark:shadow-card-dark ${style.borderHover}`
                 : "border-dashed border-surface-300 bg-surface-50/50 hover:border-surface-400 dark:border-surface-700 dark:bg-surface-900/30 dark:hover:border-surface-600"
             }`}
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3.5">
                 <div
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-base font-bold tracking-tight ${
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-base font-bold tracking-tight transition-transform duration-200 group-hover:scale-105 ${
                     platform.connected ? style.mark : "bg-surface-100 text-surface-400 dark:bg-surface-800"
                   }`}
                 >
@@ -161,7 +165,7 @@ export function PlatformCards() {
             </div>
 
             {platform.connected ? (
-              <div className="mt-6">
+              <div className="mt-7">
                 <div className="flex items-baseline justify-between">
                   <p className="font-mono text-2xl font-semibold tabular-nums text-surface-900 dark:text-surface-50">
                     {platform.total_solved}
@@ -170,14 +174,12 @@ export function PlatformCards() {
                     </span>
                   </p>
                   {platform.rating !== null && (
-                    <p
-                      className={`font-mono text-sm font-semibold tabular-nums ${style.text}`}
-                    >
+                    <p className={`font-mono text-sm font-semibold tabular-nums ${style.text}`}>
                       {platform.rating}
                     </p>
                   )}
                 </div>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-surface-100 dark:bg-surface-800">
+                <div className="mt-3.5 h-1.5 w-full overflow-hidden rounded-full bg-surface-100 dark:bg-surface-800">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${barWidth}%` }}
@@ -187,7 +189,7 @@ export function PlatformCards() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 flex items-center justify-between">
+              <div className="mt-7 flex items-center justify-between">
                 <p className="text-xs text-surface-400 dark:text-surface-500">
                   Link your account to see stats here.
                 </p>

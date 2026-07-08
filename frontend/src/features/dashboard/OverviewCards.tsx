@@ -9,6 +9,11 @@
  * unevenly — total problems solved is the number a returning user
  * cares about most, so it gets a dominant hero cell in the bento
  * grid. The other three are supporting figures, sized down to match.
+ *
+ * A "trend" indicator per card was part of this round's brief, but
+ * the summary payload has no comparison period to compute one from —
+ * StatCard now supports an optional `trend` prop for whenever that
+ * data exists, it's just not populated here today.
  */
 
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +36,7 @@ const itemVariants = {
 function CardSkeleton({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-2xl border border-surface-200 bg-surface-100 dark:border-surface-800 dark:bg-surface-800 ${className}`}
+      className={`animate-pulse rounded-[20px] border border-surface-200 bg-surface-100 dark:border-surface-800 dark:bg-surface-800 ${className}`}
     />
   );
 }
@@ -65,18 +70,18 @@ export function OverviewCards() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:auto-rows-fr">
-        <CardSkeleton className="h-[180px] lg:col-span-2 lg:row-span-2 lg:h-auto" />
-        <CardSkeleton className="h-[104px]" />
-        <CardSkeleton className="h-[104px]" />
-        <CardSkeleton className="h-[104px] sm:col-span-2 lg:col-span-2 lg:row-start-2" />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:auto-rows-fr">
+        <CardSkeleton className="h-[200px] lg:col-span-2 lg:row-span-2 lg:h-auto" />
+        <CardSkeleton className="h-[112px]" />
+        <CardSkeleton className="h-[112px]" />
+        <CardSkeleton className="h-[112px] sm:col-span-2 lg:col-span-2 lg:row-start-2" />
       </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="rounded-2xl border border-surface-200 bg-white p-6 text-sm text-surface-500 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-400">
+      <div className="rounded-[20px] border border-surface-200 bg-white p-6 text-sm text-surface-500 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-400">
         Couldn&apos;t load your overview stats right now. Try refreshing the page.
       </div>
     );
@@ -87,7 +92,7 @@ export function OverviewCards() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2"
+      className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2"
     >
       {/* Hero cell — dominant, spans two columns and both rows on desktop */}
       <motion.div variants={itemVariants} className="lg:col-span-2 lg:row-span-2">

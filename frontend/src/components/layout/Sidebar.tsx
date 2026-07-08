@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { Code2, LayoutDashboard, Settings, Trophy, User, X, Zap } from "lucide-react";
+import { Code2, LayoutDashboard, Settings, Target, Trophy, User, X, Zap } from "lucide-react";
 
 import { useAuth } from "@/store/authStore";
 
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/leetcode", label: "LeetCode", icon: Trophy },
   { to: "/codeforces", label: "Codeforces", icon: Zap },
+  { to: "/goals", label: "Goals", icon: Target },
   { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },
 ];

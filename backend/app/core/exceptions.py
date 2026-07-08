@@ -91,3 +91,13 @@ class CodeforcesHandleInvalidError(CodeforcesError):
 class CodeforcesSyncFailedError(CodeforcesError):
     def __init__(self, reason: str) -> None:
         super().__init__(f"Failed to sync with Codeforces: {reason}")
+
+
+class GoalError(Exception):
+    """Base class for all goal-tracking-related errors."""
+
+
+class GoalNotFoundError(GoalError):
+    def __init__(self, goal_id: int) -> None:
+        self.goal_id = goal_id
+        super().__init__(f"Goal with id {goal_id} not found.")

@@ -69,6 +69,19 @@ def get_profile(
     )
 
 
+@router.delete(
+    "/profile",
+    response_model=APIResponse[None],
+    summary="Disconnect the linked Codeforces account",
+)
+def disconnect(
+    current_user: CurrentUser,
+    codeforces_service: CodeforcesService = Depends(get_codeforces_service),
+) -> APIResponse[None]:
+    codeforces_service.disconnect(user_id=current_user.id)
+    return APIResponse(message="Codeforces account disconnected successfully.", data=None)
+
+
 @router.get(
     "/submissions",
     response_model=APIResponse[list[CodeforcesSubmissionResponse]],
